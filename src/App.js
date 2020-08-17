@@ -1,26 +1,46 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import axios from 'axios';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default class PersonList extends React.Component {
+  state = {
+    longUrl: '',
+  }
+
+  handleChange = event => {
+    this.setState({ longUrl: event.target.value });
+  }
+
+  handleSubmit = event => {
+    event.preventDefault();
+
+    const url = {
+      longUrl: this.state.longUrl
+    };
+
+    axios.post(`http://localhost:9001/url`, { longUrl: this.state.longUrl })
+      .then(
+        res => {
+        console.log(res);
+        console.log(res.data);
+        alert("This is the nano URL: http://localhost:9001/url/" + res.data)
+      },err => {
+        console.log(err);
+        alert("This URL is not valid")
+        
+      })
+  }
+
+  render() {
+    return (
+      <div>
+        <form onSubmit={this.handleSubmit}>
+          <label>
+            URL:
+            <input type="text" name="longUrl" value={this.state.longUrl} onChange={this.handleChange} />
+          </label>
+          <button type="submit">Add</button>
+        </form>
+      </div>
+    )
+  }
 }
-
-export default App;
